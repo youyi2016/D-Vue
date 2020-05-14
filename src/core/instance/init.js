@@ -15,11 +15,14 @@
 export function initMixin(Vue) {
 
 	Vue.prototype.$mount = function (el) {
-			document.querySelector(el).innerHTML = '<div style="color: #f00">DVue的主页</div>'
+	
+		document.querySelector(el).appendChild = '<div style="color: #f00">DVue的主页</div>'
 	}
 
 	Vue.prototype._init = function (options) {
 		const vm = this
+		const div =  document.createElement('div')
+		div.innerHTML = options.render
 		if(options.el) {
 			vm.$mount(options.el)
 		}

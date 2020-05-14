@@ -5,5 +5,5 @@ import {
 function DVue(options) {
 	this._init(options)
 }
-initMixin(MiniVue);
+initMixin(DVue);
 export default DVue

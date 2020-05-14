@@ -2,8 +2,8 @@ import {
 	initMixin
 } from './init'
 
-function MiniVue(options) {
+function DVue(options) {
 	this._init(options)
 }
 initMixin(MiniVue);
-export default MiniVue
+export default DVue

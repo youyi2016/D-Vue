@@ -23,15 +23,18 @@ src/core/instance/init.js
 export function initMixin(Vue) {
 
 	Vue.prototype.$mount = function (el) {
-			document.querySelector(el).innerHTML = '<div style="color: #f00">DVue的主页</div>'
+		document.querySelector(el).innerHTML= '<div style="color: #f00">DVue的主页</div>'
 	}
 
 	Vue.prototype._init = function (options) {
-			const vm = this
-			if(options.el) {
-				vm.$mount(options.el)
-			}
-	}
+		const vm = this 
+        const div = document.createElement('div')
+        div.innerHTML = options.render
+        document.body.insertBefore(div, document.body.firstElementChild);
+		if(options.el) {
+			vm.$mount(options.el)
+		}
+    }
 }
 ```
 
@@ -216,7 +219,6 @@ index.html中引入bundle.js，可以看到页面中的内容。
 ]);
 ```
 * 首先从入口文件开始，分析依赖树
-* 
 
 ### 自动更新主入口页面index.html中的js文件
 * npm install --save-dev html-webpack-plugin
@@ -251,5 +253,57 @@ devServer: {
     "start": "webpack-dev-server --open"
   },
 ```
+执行npm start
+### 模块热更新（没有抖动的局部刷新）
+
+启用HMR实现模块热更新。
+
+使用webpack dev server 和 Node.js API结合实现,使用webpack-dev-server中的addDevServerEntrypoints来添加HRM入口。（代替之前执行webpack-dev-server --open指令）
+
+ 创建dev-server.js:
+ ```
+ const webpackDevServer = require('webpack-dev-server');
+const webpack = require('webpack');
+
+const config = require('./webpack.config.js');
+const options = {
+  contentBase: './dist',
+  hot: true,
+  host: 'localhost'
+};
+
+webpackDevServer.addDevServerEntrypoints(config, options);
+const compiler = webpack(config);
+const server = new webpackDevServer(compiler, options);
+
+server.listen(5000, 'localhost', () => {
+  console.log('dev server listening on port 5000');
+});
+ ```
+
+ package.json配置脚本指令
+
+ ```
+  "dev": "node dev-server.js"
+ ```
+
+[模块热更新](https://www.webpackjs.com/concepts/hot-module-replacement/)
+
+### 构建环境区分
+>开发环境(development)和生产环境(production)的构建目标差异很大。在开发环境中，我们需要具有强大的、具有实时重新加载(live reloading)或热模块替换(hot module replacement)能力的 source map 和 localhost server。而在生产环境中，我们的目标则转向于关注更小的 bundle，更轻量的 source map，以及更优化的资源，以改善加载时间。由于要遵循逻辑分离，我们通常建议为每个环境编写彼此独立的 webpack 配置。
+
+ 使用webpack-merge可以将多个配置合并到一起：
+
+ 具体使用见项目目录build文件夹
+
+ 更改package.json中的脚本指令：
+
+ ```
+ -     "start": "webpack-dev-server --open",
++     "start": "webpack-dev-server --open --config webpack.dev.js",
+-     "build": "webpack"
++     "build": "webpack --config webpack.prod.js"
+ ```
+
 ## 第二阶段 模拟Vue的实现
 to-do

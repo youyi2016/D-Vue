@@ -7,17 +7,29 @@ const webpack = require('webpack');
 // }
 
 module.exports = {
-	entry: path.resolve(__dirname, 'examples/index.js'),
+	entry: {
+		index: path.resolve(__dirname, '../examples/index.js'),
+	},
 	output: {
 		filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')
+		chunkFilename: '[name].bundle.js',
+    path: path.resolve(__dirname, '../dist')
 	},
 	plugins: [
 		// new CleanWebpackPlugin(['dist']),
 		new HtmlWebpackPlugin({
 				title: 'D-Vue'
 		}),
-  ],
+		//webpack 4.0+已移除
+		// new webpack.optimize.CommonsChunkPlugin({ 
+		//      name: 'common' // 指定公共 bundle 的名称。
+		//  })
+	],
+	// optimization: {
+	// 	splitChunks: {
+	// 		automaticNameDelimiter: '-'
+	// 	}
+	// },	
 	resolve: {
     extensions: ['.js', '.vue', '.json'], //相关文件在其他文件中引入时可以不写后缀
     // alias: {

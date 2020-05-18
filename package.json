@@ -9,8 +9,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --open --config build/webpack.dev.js",
-    "build": "webpack --config  build/webpack.prod.js",
+    "start": "webpack-dev-server --open --config webpack.dev.js",
+    "build": "webpack --config  webpack.prod.js",
     "dev": "node dev-server.js"
   },
   "author": "youyi",
@@ -24,6 +24,7 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
+    "lodash": "^4.17.15",
     "uglifyjs-webpack-plugin": "^2.2.0"
   }
 }
